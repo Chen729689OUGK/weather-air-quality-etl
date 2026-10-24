@@ -1,20 +1,22 @@
 # Weather and Air Quality ETL Pipeline
 
-Automated data pipeline for weather and air quality data in Fes, Morocco.
+An automated ETL pipeline that collects weather and air quality forecast data for Fes, Morocco, transforms it into structured datasets, stores it in PostgreSQL, and validates data quality.
 
 # Overview
 
-This project implements an end-to-end ETL (Extract, Transform, Load) pipeline that collects weather and air quality forecast data, transforms it into structured datasets, loads it into PostgreSQL, and validates data quality.
+This project demonstrates an end-to-end data engineering workflow using Python, REST APIs, PostgreSQL, SQL, and Docker Compose. The pipeline can be scheduled daily on macOS using cron.
+
 
 The pipeline is orchestrated with Python and can be scheduled to run automatically using cron on macOS.
 
 # Objectives
 
 * Retrieve weather and air quality data from public APIs.
-* Transform raw JSON responses into clean, structured CSV datasets.
-* Store processed data in a PostgreSQL relational database.
-* Implement data quality checks and SQL analytics.
-* Automate pipeline execution and maintain execution logs.
+* Transform raw JSON responses into clean, structured datasets.
+* Load observations into a PostgreSQL database.
+* Validate data quality and prevent duplicate records.
+* Perform analytical queries using SQL.
+* Automate execution and maintain logs.
 
 # Architecture
 '''bash 
@@ -51,43 +53,86 @@ Scheduling: cron
 Logging: logs/
 ''' 
 
++---------------------------+
+|       Open-Meteo APIs     |
+| Weather & Air Quality     |
++-------------+-------------+
+              |
+              v
++---------------------------+
+| EXTRACT                   |
+| Retrieve API responses    |
+| Save raw JSON data        |
++-------------+-------------+
+              |
+              v
++---------------------------+
+| TRANSFORM                 |
+| Clean and structure data  |
+| Generate processed CSVs   |
++-------------+-------------+
+              |
+              v
++---------------------------+
+| LOAD                      |
+| Insert data into          |
+| PostgreSQL                |
++-------------+-------------+
+              |
+              v
++---------------------------+
+| VALIDATE                  |
+| Run data quality checks   |
++-------------+-------------+
+              |
+              v
++---------------------------+
+| SQL Analytics             |
+| Weather and air quality   |
+| summaries                 |
++---------------------------+
+Orchestration : Python
+Database      : PostgreSQL
+Deployment    : Docker Compose
+Scheduling    : cron
+Logging       : logs/
+
 # Technologies
 
 * Python — pipeline orchestration and data processing
-* Pandas — data transformation and cleaning
-* Requests — API requests
-* Open-Meteo APIs — weather and air quality forecast data
+* Pandas — data cleaning and transformation
+* Requests — API communication
+* Open-Meteo APIs — weather and air quality forecasts
 * PostgreSQL — relational data storage
 * Docker Compose — database deployment
-* SQL — analytics and data quality checks
+* SQL — analytics and validation
 * cron — scheduled execution on macOS
 
 # Data Sources
 
-The project uses Open-Meteo weather and air quality APIs for Fes, Morocco.
+The pipeline retrieves forecast data for Fes, Morocco, using the Open-Meteo weather and air quality APIs.
 
 Weather variables include temperature, relative humidity, precipitation, and wind speed.
 
-Air quality variables include PM2.5, PM10, nitrogen dioxide, ozone, and European Air Quality Index (European AQI).
+Air quality variables include PM2.5, PM10, nitrogen dioxide, ozone, and the European Air Quality Index (European AQI).
 
-Note: Open-Meteo provides forecast data for these endpoints. These values should not be interpreted as direct measurements from local monitoring stations.
+Important: These API values are forecast data and should not be interpreted as direct measurements from local monitoring stations.
 
 # Project Structure
+
 weather-air-quality-etl/
-├── data/
-│   ├── raw/
-│   └── processed/
-├── logs/
-├── sql/
-│   ├── schema.sql
-│   └── analytics.sql
 ├── src/
 │   ├── extract.py
 │   ├── transform.py
 │   ├── load.py
 │   ├── validate.py
 │   └── main.py
+├── sql/
+│   ├── schema.sql
+│   └── analytics.sql
 ├── tests/
+├── data/
+├── logs/
 ├── .env
 ├── .gitignore
 ├── docker-compose.yml
@@ -97,87 +142,104 @@ weather-air-quality-etl/
 # Installation and Setup
 
 1. Clone the repository
-
-git clone https://github.com/Chen729689OUGK/weather-air-quality-etl.git 
+'''bash
+git clone https://github.com/Chen729689OUGK/weather-air-quality-etl.git
 cd weather-air-quality-etl
+'''
 
-2. Create a virtual environment
-
+2. Create and activate a virtual environment
+'''bash
 python3 -m venv .venv
 source .venv/bin/activate
+'''
 
 3. Install dependencies
-
+'''bash
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
+'''
 
 4. Configure environment variables
 
-Create a .env file containing the PostgreSQL password expected by docker-compose.yml:
+Create a .env file in the project root with the PostgreSQL password expected by docker-compose.yml.
+'''bash
+cat > .env <<'EOF'
+POSTGRES_PASSWORD=your_secure_password
+EOF
+'''
 
-POSTGRES_PASSWORD=your_password
-
-Use a secure password and do not commit .env to Git.
+Replace your_secure_password with your own secure password. Never commit your .env file to GitHub.
 
 5. Start PostgreSQL
-
+'''bash
 docker compose up -d
+'''
 
 The database is configured on host port 5433.
 
 # Run the Pipeline
 
 Execute the complete pipeline with:
+The database is exposed on host port 5433.
 
+6. Run the ETL pipeline:
+'''bash
 python src/main.py
+'''
 
-The orchestration runs the following stages:
+# Pipeline Workflow
 
-1. Extract: retrieve API data and save raw JSON files.
-2. Transform: clean and convert the data into CSV files.
-3. Load: create the database schema and load data into PostgreSQL.
-4. Validate: run data quality checks.
+The pipeline executes four main stages:
 
-The loading process uses upserts to update existing observations instead of creating duplicate records for the same city and timestamp.
+1. Extract: retrieve weather and air quality data from the APIs and save raw JSON files.
+2. Transform: clean the data and generate structured CSV files.
+3. Load: create the database schema and load observations into PostgreSQL.
+4. Validate: check database contents and data quality rules.
 
 # Data Quality and Analytics
 
-The project includes validation checks for:
+The loading process uses upserts to update existing observations instead of creating duplicates for the same city and timestamp.
 
-* Presence of data in the database tables
+# Data Quality and SQL Analytics
+
+The validation stage checks:
+
+* Data availability in database tables
 * Missing observation timestamps
 * Invalid humidity values
 * Negative precipitation, wind speed, and air quality measurements
 * Duplicate city and timestamp combinations
 
-SQL queries provide summaries of weather conditions, average and maximum European AQI, high-AQI periods, and missing values.
+The SQL scripts also support analytical queries on weather conditions, European AQI summaries, high-AQI periods, and missing values.
 
 # Logging and Automation
 
-Pipeline execution logs are stored in logs/etl.log.
+Execution logs are stored locally in logs/etl.log.
 
-On macOS, cron can schedule automatic execution. The current local setup is configured to run daily at 08:00, provided the Mac is available and the PostgreSQL service is running.
+The pipeline can be scheduled using macOS cron. The current local configuration is intended to run daily at 08:00, provided the Mac is available and the PostgreSQL service is running.
 
 # Key Engineering Concepts
 
 * ETL pipeline design
-* API data ingestion
+* REST API ingestion
 * Data cleaning and transformation
 * Relational database modeling
 * Idempotent data loading
 * Data quality validation
 * SQL analytics
 * Docker-based database deployment
-* Pipeline orchestration, logging, and scheduling
+* Logging and scheduled automation
 
 # Future Improvements
 
-* Add unit and integration tests.
-* Build a Power BI dashboard for weather and air quality trends.
-* Add retry logic and API failure handling.
-* Deploy the pipeline to a cloud environment.
-* Introduce workflow orchestration with a dedicated scheduling tool.
+* Expand automated unit and integration tests
+* Build a Power BI dashboard for weather and air quality trends
+* Add retry logic and API failure handling
+* Deploy the pipeline to a cloud environment
+* Introduce a dedicated workflow orchestration tool
 
 Author
+
 JADE-DINE ALABI
 
 Big Data and AI student interested in Data Engineering, Data Analytics, and Business Intelligence.
