@@ -1,4 +1,4 @@
-Weather and Air Quality ETL Pipeline
+# Weather and Air Quality ETL Pipeline
 
 Automated data pipeline for weather and air quality data in Fes, Morocco.
 
