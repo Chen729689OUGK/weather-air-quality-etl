@@ -193,10 +193,10 @@ docker compose down
 
 The pipeline executes four main stages:
 
-### 1. Extract: retrieve weather and air quality data from the APIs and save raw JSON files.
-### 2. Transform: clean the data and generate structured CSV files.
-### 3. Load: create the database schema and load observations into PostgreSQL.
-### 4. Validate: check database contents and data quality rules.
+ 1. Extract: retrieve weather and air quality data from the APIs and save raw JSON files.
+ 2. Transform: clean the data and generate structured CSV files.
+ 3. Load: create the database schema and load observations into PostgreSQL.
+ 4. Validate: check database contents and data quality rules.
 
 ## Data Quality and Analytics
 
