@@ -242,13 +242,15 @@ The pipeline can be scheduled using macOS cron. The current local configuration 
 
 ## Screenshots
 
-### 1.ETL Pipeline Execution
+### 1. ETL Pipeline Execution
 
 Successful execution of the ETL pipeline, including data extraction, transformation, validation, and loading.
 
-### 2.PostgresSQL Data Storage
+### 2. PostgreSQL Data Storage
 
 Verification of weather observations successfully stored in the PostgreSQL database.
+
+
 
 
 Author
