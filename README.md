@@ -97,7 +97,7 @@ Installation and Setup
 
 1. Clone the repository
 
-git clone <YOUR_GITHUB_REPOSITORY_URL>
+git clone https://github.com/Chen729689OUGK/weather-air-quality-etl
 cd weather-air-quality-etl
 
 2. Create a virtual environment
