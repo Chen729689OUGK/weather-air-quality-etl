@@ -17,6 +17,7 @@ The pipeline is orchestrated with Python and can be scheduled to run automatical
 * Automate pipeline execution and maintain execution logs.
 
 # Architecture
+'''bash 
 
 Open-Meteo APIs
       |
@@ -48,6 +49,7 @@ Open-Meteo APIs
 Orchestration: Python
 Scheduling: cron
 Logging: logs/
+''' 
 
 # Technologies
 
