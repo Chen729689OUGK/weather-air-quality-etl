@@ -2,13 +2,13 @@
 
 Automated data pipeline for weather and air quality data in Fes, Morocco.
 
-Overview
+# Overview
 
 This project implements an end-to-end ETL (Extract, Transform, Load) pipeline that collects weather and air quality forecast data, transforms it into structured datasets, loads it into PostgreSQL, and validates data quality.
 
 The pipeline is orchestrated with Python and can be scheduled to run automatically using cron on macOS.
 
-Objectives
+# Objectives
 
 * Retrieve weather and air quality data from public APIs.
 * Transform raw JSON responses into clean, structured CSV datasets.
@@ -16,7 +16,7 @@ Objectives
 * Implement data quality checks and SQL analytics.
 * Automate pipeline execution and maintain execution logs.
 
-Architecture
+# Architecture
 
 Open-Meteo APIs
       |
@@ -49,7 +49,7 @@ Orchestration: Python
 Scheduling: cron
 Logging: logs/
 
-Technologies
+# Technologies
 
 * Python — pipeline orchestration and data processing
 * Pandas — data transformation and cleaning
@@ -60,7 +60,7 @@ Technologies
 * SQL — analytics and data quality checks
 * cron — scheduled execution on macOS
 
-Data Sources
+# Data Sources
 
 The project uses Open-Meteo weather and air quality APIs for Fes, Morocco.
 
@@ -70,8 +70,7 @@ Air quality variables include PM2.5, PM10, nitrogen dioxide, ozone, and European
 
 Note: Open-Meteo provides forecast data for these endpoints. These values should not be interpreted as direct measurements from local monitoring stations.
 
-Project Structure
-
+# Project Structure
 weather-air-quality-etl/
 ├── data/
 │   ├── raw/
@@ -93,11 +92,11 @@ weather-air-quality-etl/
 ├── requirements.txt
 └── README.md
 
-Installation and Setup
+# Installation and Setup
 
 1. Clone the repository
 
-git clone https://github.com/Chen729689OUGK/weather-air-quality-etl
+git clone https://github.com/Chen729689OUGK/weather-air-quality-etl.git 
 cd weather-air-quality-etl
 
 2. Create a virtual environment
@@ -123,7 +122,7 @@ docker compose up -d
 
 The database is configured on host port 5433.
 
-Run the Pipeline
+# Run the Pipeline
 
 Execute the complete pipeline with:
 
@@ -138,7 +137,7 @@ The orchestration runs the following stages:
 
 The loading process uses upserts to update existing observations instead of creating duplicate records for the same city and timestamp.
 
-Data Quality and Analytics
+# Data Quality and Analytics
 
 The project includes validation checks for:
 
@@ -150,13 +149,13 @@ The project includes validation checks for:
 
 SQL queries provide summaries of weather conditions, average and maximum European AQI, high-AQI periods, and missing values.
 
-Logging and Automation
+# Logging and Automation
 
 Pipeline execution logs are stored in logs/etl.log.
 
 On macOS, cron can schedule automatic execution. The current local setup is configured to run daily at 08:00, provided the Mac is available and the PostgreSQL service is running.
 
-Key Engineering Concepts
+# Key Engineering Concepts
 
 * ETL pipeline design
 * API data ingestion
@@ -168,7 +167,7 @@ Key Engineering Concepts
 * Docker-based database deployment
 * Pipeline orchestration, logging, and scheduling
 
-Future Improvements
+# Future Improvements
 
 * Add unit and integration tests.
 * Build a Power BI dashboard for weather and air quality trends.
